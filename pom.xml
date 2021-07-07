@@ -83,6 +83,10 @@
       <id>ossrh</id>
       <url>https://oss.sonatype.org/content/repositories/snapshots</url>
     </snapshotRepository>
+    <repository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
   </distributionManagement>
 
   <build>
@@ -182,9 +186,9 @@
                 <requireMavenVersion>
                   <version>[3,)</version>
                 </requireMavenVersion>
-                <requiremaven-central-template-archetype>
+                <requireJavaVersion>
                   <version>[16,)</version>
-                </requiremaven-central-template-archetype>
+                </requireJavaVersion>
                 <banDuplicatePomDependencyVersions/>
                 <dependencyConvergence/>
                 <requireReleaseDeps/>
