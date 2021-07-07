@@ -10,7 +10,7 @@
   <packaging>jar</packaging>
 
   <name>${project.artifactId}</name>
-  <description>Java 16 template for projects intended to be published on Maven Central.</description>
+  <description>Template for Java 16 Maven projects. Includes Maven Central deployment configuration.</description>
   <url>https://github.com/nothub/maven-central-template</url>
 
   <properties>
