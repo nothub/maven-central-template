@@ -5,13 +5,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>cc.neckbeard</groupId>
-  <artifactId>maven-central-template-archetype</artifactId>
+  <artifactId>maven-central-template</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>${project.artifactId}</name>
   <description>Java 16 template for projects intended to be published on Maven Central.</description>
-  <url>https://github.com/nothub/maven-central-template-archetype</url>
+  <url>https://github.com/nothub/maven-central-template</url>
 
   <properties>
     <java.version>16</java.version>
@@ -48,14 +48,14 @@
   </developers>
 
   <scm>
-    <connection>scm:git:git://github.com/nothub/maven-central-template-archetype.git</connection>
-    <developerConnection>scm:git:ssh://github.com/nothub/maven-central-template-archetype.git</developerConnection>
-    <url>https://github.com/nothub/maven-central-template-archetype</url>
+    <connection>scm:git:git://github.com/nothub/maven-central-template.git</connection>
+    <developerConnection>scm:git:ssh://github.com/nothub/maven-central-template.git</developerConnection>
+    <url>https://github.com/nothub/maven-central-template</url>
   </scm>
 
   <issueManagement>
     <system>GitHub Issues</system>
-    <url>https://github.com/nothub/maven-central-template-archetype/issues</url>
+    <url>https://github.com/nothub/maven-central-template/issues</url>
   </issueManagement>
 
   <pluginRepositories>
@@ -69,13 +69,47 @@
     </pluginRepository>
   </pluginRepositories>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.jetbrains</groupId>
+        <artifactId>annotations</artifactId>
+        <version>21.0.1</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <dependencies>
+    <dependency>
+      <groupId>org.tinylog</groupId>
+      <artifactId>tinylog-api</artifactId>
+      <version>2.3.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.tinylog</groupId>
+      <artifactId>tinylog-impl</artifactId>
+      <version>2.3.2</version>
+    </dependency>
+    <!-- provided -->
+    <dependency>
+      <groupId>org.jetbrains</groupId>
+      <artifactId>annotations</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <!-- test -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
-      <version>5.7.2</version>
+      <version>5.8.0-M1</version>
       <scope>test</scope>
     </dependency>
+    <!-- may be needed if dependencies provide an old version
+    <dependency>
+      <groupId>org.junit.vintage</groupId>
+      <artifactId>junit-vintage-engine</artifactId>
+      <version>5.8.0-M1</version>
+      <scope>test</scope>
+    </dependency> -->
   </dependencies>
 
   <distributionManagement>
@@ -83,14 +117,9 @@
       <id>ossrh</id>
       <url>https://oss.sonatype.org/content/repositories/snapshots</url>
     </snapshotRepository>
-    <repository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-    </repository>
   </distributionManagement>
 
   <build>
-
     <defaultGoal>clean verify</defaultGoal>
 
     <pluginManagement>
@@ -100,6 +129,11 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-clean-plugin</artifactId>
           <version>3.1.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-antrun-plugin</artifactId>
+          <version>3.0.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -115,6 +149,11 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.8.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>3.3.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -172,6 +211,7 @@
 
     <plugins>
       <plugin>
+        <!-- require maven 3, java 16, check for common dependency problems -->
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
         <executions>
@@ -209,6 +249,32 @@
         </configuration>
       </plugin>
       <plugin>
+        <!-- create application jar with dependencies -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <archive>
+            <manifest>
+              <mainClass>cc.neckbeard.app.App</mainClass>
+            </manifest>
+          </archive>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+          <!-- <finalName>${project.artifactId}-${project.version}-release</finalName>
+          <appendAssemblyId>false</appendAssemblyId> -->
+        </configuration>
+      </plugin>
+      <plugin>
+        <!-- run tests -->
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
       </plugin>
@@ -219,10 +285,13 @@
   <profiles>
     <profile>
       <id>release</id>
+
       <build>
         <defaultGoal>clean verify</defaultGoal>
+
         <plugins>
           <plugin>
+            <!-- never release SNAPSHOT versions -->
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-enforcer-plugin</artifactId>
             <executions>
@@ -242,16 +311,7 @@
             </executions>
           </plugin>
           <plugin>
-            <groupId>org.sonatype.plugins</groupId>
-            <artifactId>nexus-staging-maven-plugin</artifactId>
-            <extensions>true</extensions>
-            <configuration>
-              <serverId>ossrh</serverId>
-              <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-              <autoReleaseAfterClose>true</autoReleaseAfterClose>
-            </configuration>
-          </plugin>
-          <plugin>
+            <!-- create sources jar -->
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-source-plugin</artifactId>
             <executions>
@@ -264,6 +324,7 @@
             </executions>
           </plugin>
           <plugin>
+            <!-- create javadoc jar -->
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
             <executions>
@@ -276,6 +337,7 @@
             </executions>
           </plugin>
           <plugin>
+            <!-- sign artifacts -->
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
             <executions>
@@ -288,8 +350,58 @@
               </execution>
             </executions>
           </plugin>
+          <plugin>
+            <!-- java 16 nexus-staging-maven-plugin info message -->
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>antrun-message</id>
+                <phase>validate</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <target>
+                    <echo level="info" message="Due to illegal reflective access issues with Java 16 using:"/>
+                    <echo level="info" message="org.sonatype.plugins:nexus-staging-maven-plugin:1.6.8"/>
+                    <echo level="info" message="Run the JVM with the following parameters:"/>
+                    <echo level="info" message="--add-opens java.base/java.lang.reflect=ALL-UNNAMED"/>
+                    <echo level="info" message="--add-opens java.base/java.text=ALL-UNNAMED"/>
+                    <echo level="info" message="--add-opens java.base/java.util=ALL-UNNAMED"/>
+                    <echo level="info" message="--add-opens java.desktop/java.awt.font=ALL-UNNAMED"/>
+                    <echo level="info" message="(or put them in ${basedir}/.mvn/jvm.config)"/>
+                  </target>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <!-- publish to maven central -->
+            <groupId>org.sonatype.plugins</groupId>
+            <artifactId>nexus-staging-maven-plugin</artifactId>
+            <extensions>true</extensions>
+            <configuration>
+              <serverId>ossrh</serverId>
+              <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+              <autoReleaseAfterClose>true</autoReleaseAfterClose>
+            </configuration>
+          </plugin>
         </plugins>
+
+        <resources>
+          <resource>
+            <directory>src/main/resources</directory>
+            <filtering>true</filtering>
+            <excludes>
+              <!-- exclude logger debugging configuration in release -->
+              <exclude>tinylog-dev.properties</exclude>
+            </excludes>
+          </resource>
+        </resources>
+
       </build>
+
     </profile>
   </profiles>
 
