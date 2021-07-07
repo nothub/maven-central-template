@@ -1,0 +1,36 @@
+name: ':neckbeard:'
+
+on: push
+
+jobs:
+
+  job:
+    name: Java ${{ matrix.java }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        java: [ 8, 11, 16 ]
+      fail-fast: true
+
+    steps:
+
+      - name: Git
+        uses: actions/checkout@v2
+
+      - name: Java
+        uses: actions/setup-java@v2.1.0
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: 'adopt'
+          check-latest: true
+
+      - name: Cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: '${{ runner.os }}-gradle-${{ hashFiles(''**/*.gradle'') }}'
+          restore-keys: '${{ runner.os }}-gradle'
+
+      - name: Test
+        run: mvn --batch-mode --show-version --errors verify --file pom.xml
