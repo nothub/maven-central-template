@@ -60,6 +60,8 @@
 
   <build>
 
+    <defaultGoal>clean verify</defaultGoal>
+
     <pluginManagement>
       <plugins>
         <!-- apache maven -->
@@ -137,15 +139,13 @@
       </plugins>
     </pluginManagement>
 
-    <defaultGoal>clean test</defaultGoal>
-
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
         <executions>
           <execution>
-            <id>enforce-maven-versions</id>
+            <id>enforce-rules</id>
             <goals>
               <goal>enforce</goal>
             </goals>
@@ -154,36 +154,16 @@
                 <requireMavenVersion>
                   <version>[3,)</version>
                 </requireMavenVersion>
-              </rules>
-              <fail>true</fail>
-            </configuration>
-          </execution>
-          <execution>
-            <id>enforce-java-versions</id>
-            <goals>
-              <goal>enforce</goal>
-            </goals>
-            <configuration>
-              <rules>
                 <requireJavaVersion>
                   <version>[16,)</version>
                 </requireJavaVersion>
+                <banDuplicatePomDependencyVersions/>
+                <dependencyConvergence/>
+                <requireUpperBoundDeps/>
               </rules>
               <fail>true</fail>
+              <failFast>true</failFast>
             </configuration>
-          </execution>
-          <execution>
-            <id>enforce</id>
-            <configuration>
-              <rules>
-                <requireUpperBoundDeps>
-                </requireUpperBoundDeps>
-              </rules>
-              <fail>true</fail>
-            </configuration>
-            <goals>
-              <goal>enforce</goal>
-            </goals>
           </execution>
         </executions>
       </plugin>
@@ -207,22 +187,25 @@
     <profile>
       <id>release</id>
       <build>
+        <defaultGoal>clean verify</defaultGoal>
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-enforcer-plugin</artifactId>
             <executions>
               <execution>
-                <id>enforce-no-snapshot-release</id>
+                <id>enforce-rules</id>
                 <goals>
                   <goal>enforce</goal>
                 </goals>
                 <configuration>
                   <rules>
                     <requireReleaseVersion>
+                      <message>Releasing SNAPSHOT version is not allowed!</message>
                     </requireReleaseVersion>
                   </rules>
                   <fail>true</fail>
+                  <failFast>true</failFast>
                 </configuration>
               </execution>
             </executions>
