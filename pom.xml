@@ -132,11 +132,6 @@
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-antrun-plugin</artifactId>
-          <version>3.0.0</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
           <version>3.2.0</version>
         </plugin>
@@ -351,33 +346,11 @@
             </executions>
           </plugin>
           <plugin>
-            <!-- java 16 nexus-staging-maven-plugin info message -->
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-antrun-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>antrun-message</id>
-                <phase>validate</phase>
-                <goals>
-                  <goal>run</goal>
-                </goals>
-                <configuration>
-                  <target>
-                    <echo level="info" message="Due to illegal reflective access issues with Java 16 using:"/>
-                    <echo level="info" message="org.sonatype.plugins:nexus-staging-maven-plugin:1.6.8"/>
-                    <echo level="info" message="Run the JVM with the following parameters:"/>
-                    <echo level="info" message="--add-opens java.base/java.lang.reflect=ALL-UNNAMED"/>
-                    <echo level="info" message="--add-opens java.base/java.text=ALL-UNNAMED"/>
-                    <echo level="info" message="--add-opens java.base/java.util=ALL-UNNAMED"/>
-                    <echo level="info" message="--add-opens java.desktop/java.awt.font=ALL-UNNAMED"/>
-                    <echo level="info" message="(or put them in ${basedir}/.mvn/jvm.config)"/>
-                  </target>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
             <!-- publish to maven central -->
+            <!-- Due to illegal reflective access issues with nexus-staging-maven-plugin:1.6.8 using modern Java,
+                 the JVM needs to be started with opens defined for the following packages:
+                 java.base/java.lang.reflect, java.base/java.text, java.base/java.util, java.desktop/java.awt.font
+                 (the associated config can be found at: .mvn/jvm.config)" -->
             <groupId>org.sonatype.plugins</groupId>
             <artifactId>nexus-staging-maven-plugin</artifactId>
             <extensions>true</extensions>
