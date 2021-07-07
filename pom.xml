@@ -20,12 +20,6 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
-  <scm>
-    <connection>scm:git:git://github.com/nothub/JavaVersion.git</connection>
-    <developerConnection>scm:git:ssh://github.com/nothub/JavaVersion.git</developerConnection>
-    <url>https://github.com/nothub/JavaVersion</url>
-  </scm>
-
   <licenses>
     <license>
       <name>MIT License</name>
@@ -35,19 +29,45 @@
 
   <developers>
     <developer>
+      <id>hub</id>
       <name>nothub</name>
       <email>nothub@posteo.net</email>
       <organization>neckbeard.cc</organization>
       <organizationUrl>https://neckbeard.cc/</organizationUrl>
+      <roles>
+        <role>code plumbing</role>
+        <role>operations plumbing</role>
+        <role>infrastructure plumbing</role>
+      </roles>
+      <timezone>Europe/Berlin</timezone>
+      <properties>
+        <github>nothub</github>
+        <discord>hub#6408</discord>
+      </properties>
     </developer>
   </developers>
 
-  <distributionManagement>
-    <snapshotRepository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </snapshotRepository>
-  </distributionManagement>
+  <scm>
+    <connection>scm:git:git://github.com/nothub/maven-central-template-archetype.git</connection>
+    <developerConnection>scm:git:ssh://github.com/nothub/maven-central-template-archetype.git</developerConnection>
+    <url>https://github.com/nothub/maven-central-template-archetype</url>
+  </scm>
+
+  <issueManagement>
+    <system>GitHub Issues</system>
+    <url>https://github.com/nothub/maven-central-template-archetype/issues</url>
+  </issueManagement>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>central</id>
+      <name>Central Repository</name>
+      <url>https://repo.maven.apache.org/maven2</url>
+      <releases>
+        <updatePolicy>daily</updatePolicy>
+      </releases>
+    </pluginRepository>
+  </pluginRepositories>
 
   <dependencies>
     <dependency>
@@ -57,6 +77,13 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
 
   <build>
 
@@ -151,14 +178,16 @@
             </goals>
             <configuration>
               <rules>
+                <!-- https://maven.apache.org/enforcer/enforcer-rules/index.html -->
                 <requireMavenVersion>
                   <version>[3,)</version>
                 </requireMavenVersion>
-                <requireJavaVersion>
+                <requiremaven-central-template-archetype>
                   <version>[16,)</version>
-                </requireJavaVersion>
+                </requiremaven-central-template-archetype>
                 <banDuplicatePomDependencyVersions/>
                 <dependencyConvergence/>
+                <requireReleaseDeps/>
                 <requireUpperBoundDeps/>
               </rules>
               <fail>true</fail>
@@ -200,9 +229,7 @@
                 </goals>
                 <configuration>
                   <rules>
-                    <requireReleaseVersion>
-                      <message>Releasing SNAPSHOT version is not allowed!</message>
-                    </requireReleaseVersion>
+                    <requireReleaseVersion/>
                   </rules>
                   <fail>true</fail>
                   <failFast>true</failFast>
