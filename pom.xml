@@ -367,7 +367,7 @@
             <directory>src/main/resources</directory>
             <filtering>true</filtering>
             <excludes>
-              <!-- exclude logger debugging configuration in release -->
+              <!-- exclude logger debugging configuration in release artifact -->
               <exclude>tinylog-dev.properties</exclude>
             </excludes>
           </resource>
