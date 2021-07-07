@@ -5,12 +5,12 @@ on: push
 jobs:
 
   job:
-    name: Java ${{ matrix.java }}
+    name: ${{ matrix.os }}
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        java: [ 8, 11, 16 ]
+        os: [ ubuntu-latest, windows-latest, macOS-latest ]
       fail-fast: true
 
     steps:
@@ -21,7 +21,7 @@ jobs:
       - name: Java
         uses: actions/setup-java@v2.1.0
         with:
-          java-version: ${{ matrix.java }}
+          java-version: 16
           distribution: 'adopt'
           check-latest: true
 
