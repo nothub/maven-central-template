@@ -10,9 +10,9 @@ trim_trailing_whitespace = true
 [*.java]
 indent_size = 4
 
-[*.xml]
+[*.{json, toml, xml, yaml, yml}]
 indent_size = 2
 
-[*.md]
+[*.{md, markdown}]
 max_line_length = 9001
 trim_trailing_whitespace = false
