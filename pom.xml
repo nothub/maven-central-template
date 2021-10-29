@@ -10,11 +10,11 @@
   <packaging>jar</packaging>
 
   <name>${project.artifactId}</name>
-  <description>Template for Java 16 Maven projects. Includes Maven Central deployment configuration.</description>
+  <description>Template for Java 17 Maven projects. Includes Maven Central deployment configuration.</description>
   <url>https://github.com/nothub/maven-central-template</url>
 
   <properties>
-    <java.version>16</java.version>
+    <java.version>17</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -211,7 +211,7 @@
 
     <plugins>
       <plugin>
-        <!-- require maven 3, java 16, check for common dependency problems -->
+        <!-- require maven 3, java 17, check for common dependency problems -->
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
         <executions>
@@ -227,7 +227,7 @@
                   <version>[3,)</version>
                 </requireMavenVersion>
                 <requireJavaVersion>
-                  <version>[16,)</version>
+                  <version>[17,)</version>
                 </requireJavaVersion>
                 <banDuplicatePomDependencyVersions/>
                 <dependencyConvergence/>
