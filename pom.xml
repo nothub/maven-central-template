@@ -242,7 +242,7 @@
         <groupId>org.owasp</groupId>
         <artifactId>dependency-check-maven</artifactId>
         <configuration>
-          <failBuildOnAnyVulnerability>true</failBuildOnAnyVulnerability>
+          <failBuildOnCVSS>4.0</failBuildOnCVSS>
           <cveValidForHours>1</cveValidForHours>
         </configuration>
         <executions>
