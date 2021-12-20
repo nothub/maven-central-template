@@ -197,12 +197,18 @@
           <artifactId>nexus-staging-maven-plugin</artifactId>
           <version>1.6.8</version>
         </plugin>
+        <!-- owasp -->
+        <plugin>
+          <groupId>org.owasp</groupId>
+          <artifactId>dependency-check-maven</artifactId>
+          <version>6.5.1</version>
+        </plugin>
       </plugins>
     </pluginManagement>
 
     <plugins>
       <plugin>
-        <!-- require maven 3, java 17, check for common dependency problems -->
+        <!-- require maven 3.5, java 17, check for common dependency problems -->
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
         <executions>
@@ -215,7 +221,7 @@
               <rules>
                 <!-- https://maven.apache.org/enforcer/enforcer-rules/index.html -->
                 <requireMavenVersion>
-                  <version>[3,)</version>
+                  <version>[3.5,)</version>
                 </requireMavenVersion>
                 <requireJavaVersion>
                   <version>[17,)</version>
@@ -228,6 +234,22 @@
               <fail>true</fail>
               <failFast>true</failFast>
             </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <!-- check cve's (minimum required maven version 3.5) -->
+        <groupId>org.owasp</groupId>
+        <artifactId>dependency-check-maven</artifactId>
+        <configuration>
+          <failBuildOnAnyVulnerability>true</failBuildOnAnyVulnerability>
+          <cveValidForHours>1</cveValidForHours>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>
@@ -270,7 +292,6 @@
         <artifactId>maven-surefire-plugin</artifactId>
       </plugin>
     </plugins>
-
   </build>
 
   <profiles>
