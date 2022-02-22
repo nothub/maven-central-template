@@ -1,11 +1,11 @@
-name: '🚓'
+name: "🚔"
 
-on: push
+on: [ push, pull_request ]
 
 jobs:
 
   job:
-    name: ${{ matrix.os }}
+    name: verify ${{ matrix.os }}
     runs-on: ubuntu-latest
 
     strategy:
@@ -15,17 +15,17 @@ jobs:
 
     steps:
 
-      - name: Git
+      - name: Git checkout
         uses: actions/checkout@v2
 
-      - name: Java
-        uses: actions/setup-java@v2.5.0
+      - name: Java setup
+        uses: actions/setup-java@v2
         with:
           java-version: 17
-          distribution: 'adopt'
+          distribution: zulu
           check-latest: true
 
-      - name: Cache
+      - name: Cache setup
         uses: actions/cache@v2
         with:
           path: ~/.m2/repository
@@ -33,5 +33,5 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Test
+      - name: Maven verify
         run: mvn --batch-mode --show-version --errors verify --file pom.xml
