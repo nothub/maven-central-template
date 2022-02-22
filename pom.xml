@@ -203,6 +203,12 @@
           <artifactId>dependency-check-maven</artifactId>
           <version>6.5.3</version>
         </plugin>
+        <!-- spotbugs -->
+        <plugin>
+          <groupId>com.github.spotbugs</groupId>
+          <artifactId>spotbugs-maven-plugin</artifactId>
+          <version>4.5.3.0</version>
+        </plugin>
       </plugins>
     </pluginManagement>
 
@@ -247,6 +253,29 @@
         </configuration>
         <executions>
           <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <!-- static analysis via spotbugs -->
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <configuration>
+          <plugins>
+            <plugin>
+              <groupId>com.h3xstream.findsecbugs</groupId>
+              <artifactId>findsecbugs-plugin</artifactId>
+              <version>1.11.0</version>
+            </plugin>
+          </plugins>
+        </configuration>
+        <executions>
+          <execution>
+            <id>spotbugs</id>
+            <phase>verify</phase>
             <goals>
               <goal>check</goal>
             </goals>

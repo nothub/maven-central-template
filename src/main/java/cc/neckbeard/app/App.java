@@ -23,16 +23,7 @@ public class App {
             cmd = ((CommandLineParser) new DefaultParser()).parse(options, args);
         } catch (ParseException e) {
             Logger.error(e.getMessage());
-            new HelpFormatter().printHelp(
-                new java.io.File(
-                    Main
-                        .class
-                        .getProtectionDomain()
-                        .getCodeSource()
-                        .getLocation()
-                        .getPath()
-                ).getName(),
-                options);
+            new HelpFormatter().printHelp("App", options);
             System.exit(1);
             return;
         }
