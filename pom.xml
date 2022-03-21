@@ -230,7 +230,12 @@
                   <version>[3.5,)</version>
                 </requireMavenVersion>
                 <requireJavaVersion>
-                  <version>[17,)</version>
+                  <!-- requires java version:
+                  (1.8 <= x < 1.9) or
+                  (8 <= x < 9) or
+                  (11 <= x < 12) or
+                  (17 <= x < 18) -->
+                  <version>[1.8,1.9),[8,9),[11,12),[17,18)</version>
                 </requireJavaVersion>
                 <banDuplicatePomDependencyVersions/>
                 <dependencyConvergence/>
