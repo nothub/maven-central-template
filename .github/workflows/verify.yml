@@ -1,4 +1,4 @@
-name: "🚔"
+name: '🚔'
 
 on: [ push, pull_request ]
 
@@ -10,7 +10,8 @@ jobs:
 
     strategy:
       matrix:
-        os: [ ubuntu-latest, windows-latest, macOS-latest ]
+        os: [ ubuntu-latest, windows-latest ]
+        java: [ 8, 11, 17 ]
       fail-fast: true
 
     steps:
@@ -18,20 +19,17 @@ jobs:
       - name: Git checkout
         uses: actions/checkout@v3
 
+      - name: Drop JVM config
+        if: matrix.java == '8'
+        run: rm -f .mvn/jvm.config
+
       - name: Java setup
         uses: actions/setup-java@v2
         with:
-          java-version: 17
-          distribution: zulu
+          java-version: ${{ matrix.java }}
+          distribution: 'zulu'
           check-latest: true
-
-      - name: Cache setup
-        uses: actions/cache@v2
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
+          cache: 'maven'
 
       - name: Maven verify
         run: mvn --batch-mode --show-version --errors verify --file pom.xml
